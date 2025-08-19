@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { OG_LOCALE } from '../i18n/config';
+import { BRAND_NAME } from '../data/site';
+
+export const prerender = true;
+
+const pathname = Astro.url?.pathname ?? '/';
+const lang = pathname.startsWith('/en') ? 'en' : 'es';
+const otherLang = lang === 'es' ? 'en' : 'es';
+Astro.response.status = 404;
+
+const text = lang === 'es'
+  ? {
+      title: 'Página no encontrada',
+      desc: 'No pudimos encontrar lo que estabas buscando. Verifica la URL o vuelve al inicio.',
+      cta: 'Volver al inicio',
+      switchLabel: 'English'
+    }
+  : {
+      title: 'Page not found',
+      desc: "We couldn’t find what you were looking for. Check the URL or go back home.",
+      cta: 'Back to home',
+      switchLabel: 'Español'
+    };
+---
+
+<Layout
+	 title={`${BRAND_NAME} — ${text.title}`}
+	 description={text.desc}
+	 lang={lang}
+	 ogLocale={OG_LOCALE[lang]}
+>
+	<main id="content" class="pt-24">
+		<section class="py-24">
+			<div class="container mx-auto px-6">
+				<div class="max-w-2xl mx-auto text-center">
+					<div class="text-7xl md:text-8xl mb-4 font-extrabold gradient-text">404</div>
+					<h1 class="text-3xl md:text-5xl font-bold text-white mb-4">{text.title}</h1>
+					<p class="text-gray-400 mb-8">{text.desc}</p>
+					<div class="flex items-center justify-center gap-3">
+						<a href={`/${lang}/`} class="btn btn-cta text-white rounded-lg px-6 py-3 font-semibold">{text.cta}</a>
+						<a href={`/${otherLang}/`} class="btn btn-secondary bg-gray-800 text-white rounded-lg px-6 py-3 font-semibold" onclick={`try{localStorage.setItem('preferredLang','${otherLang}')}catch(e){}`}>{lang === 'es' ? `Ver en ${text.switchLabel}` : `View in ${text.switchLabel}`}</a>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+</Layout>
+
+
