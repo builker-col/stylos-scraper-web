@@ -1,6 +1,10 @@
 User-agent: *
 Allow: /
 
+# Bloqueos típicos
+Disallow: /_astro/
+Disallow: /api/
+
+# Sitemaps
+Sitemap: /sitemap-index.xml
 Sitemap: /sitemap.xml
-
-
