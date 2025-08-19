@@ -1,148 +1,32 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import FadeInObserver from '../components/FadeInObserver.vue';
+export const prerender = true;
+const SUPPORTED = ['es', 'en'];
+const DEFAULT_LANG = 'es';
 ---
 
-<Layout>
-	<!-- Header -->
-	<header class="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-md">
-		<div class="container mx-auto px-6 py-4 flex justify-between items-center">
-			<h1 class="text-xl font-bold text-white">
-				Stylos<span class="gradient-text">Scraper</span>
-			</h1>
-			<a href="#github" class="bg-gray-800 text-white hover:bg-gray-700 transition-colors duration-300 rounded-lg px-4 py-2 text-sm font-medium flex items-center space-x-2">
-				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
-					<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-				</svg>
-				<span>Ver en GitHub</span>
-			</a>
-		</div>
-	</header>
+<script>
+(function(){
+	try {
+		var supported = JSON.parse('[[SUPPORTED]]'.replace('[[SUPPORTED]]', JSON.stringify((['es','en']))));
+		var lang = null;
+		try { lang = localStorage.getItem('preferredLang'); } catch (_) {}
+		if (!lang) {
+			var langs = (navigator.languages || [navigator.language || '']).map(function(l){return (l||'').toLowerCase();});
+			for (var i=0; i<langs.length; i++) {
+				var code = (langs[i]||'').split('-')[0];
+				if (supported.indexOf(code) !== -1) { lang = code; break; }
+			}
+		}
+		if (!lang) { lang = 'es'; }
+		try { localStorage.setItem('preferredLang', lang); } catch(_) {}
+		location.replace('/' + lang + '/');
+	} catch (e) {
+		location.replace('/es/');
+	}
+})();
+</script>
 
-	<main class="pt-24">
-		<!-- Hero Section -->
-		<section id="hero" class="text-center py-20 lg:py-32">
-			<div class="container mx-auto px-6">
-				<div class="max-w-4xl mx-auto">
-					<span class="inline-block bg-gray-800 text-emerald-400 text-xs font-semibold px-3 py-1 rounded-full mb-4">
-						PROYECTO OPEN SOURCE
-					</span>
-					<h2 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
-						La solución profesional de <span class="gradient-text">Web Scraping</span> para E-commerce de Moda
-					</h2>
-					<p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-						Un sistema distribuido, escalable y robusto diseñado para la extracción masiva de datos, impulsando el ecosistema de IA de Stylos.
-					</p>
-					<a href="#features" class="bg-emerald-500 text-white hover:bg-emerald-600 transition-transform duration-300 transform hover:scale-105 rounded-lg px-8 py-4 text-lg font-bold inline-block">
-						Conocer más
-					</a>
-				</div>
-			</div>
-		</section>
-
-		<!-- Description Section -->
-		<section id="description" class="py-20">
-			<div class="container mx-auto px-6">
-				<div class="fade-in max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-					<div class="bg-gray-900/50 p-8 rounded-2xl border border-gray-800">
-						<h3 class="text-3xl font-bold text-white mb-4">¿Qué es Stylos Scraper?</h3>
-						<p class="text-gray-300 leading-relaxed">
-							Stylos Scraper es una solución profesional de web scraping distribuida, diseñada específicamente para la extracción masiva de datos de sitios de e-commerce de moda. Utiliza tecnologías avanzadas para crear un sistema escalable y robusto capaz de manejar múltiples sitios web simultáneamente.
-						</p>
-					</div>
-					<div class="text-center">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-40 w-40 inline-block text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v11m0 5l4.879-4.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242z" />
-							<path stroke-linecap="round" stroke-linejoin="round" d="M9.75 12.75h4.5m-4.5 3h4.5m-7.5-6.75h7.5" />
-						</svg>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- Features Section -->
-		<section id="features" class="py-20 bg-black/20">
-			<div class="container mx-auto px-6">
-				<div class="text-center max-w-2xl mx-auto mb-16">
-					<h3 class="text-3xl md:text-4xl font-bold text-white mb-4">Tecnologías Avanzadas</h3>
-					<p class="text-gray-400 text-lg">
-						Construido sobre un stack tecnológico moderno y potente para garantizar el máximo rendimiento y escalabilidad.
-					</p>
-				</div>
-				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-					<div class="fade-in bg-gray-900/50 p-8 rounded-2xl border border-gray-800 text-center transition-all duration-300 hover:border-emerald-500 hover:scale-105">
-						<div class="text-emerald-400 mb-4 text-4xl font-bold">Se</div>
-						<h4 class="text-xl font-semibold text-white mb-2">Selenium Grid</h4>
-						<p class="text-gray-400">Para la ejecución de pruebas y scraping en paralelo a través de múltiples máquinas y navegadores.</p>
-					</div>
-					<div class="fade-in bg-gray-900/50 p-8 rounded-2xl border border-gray-800 text-center transition-all duration-300 hover:border-emerald-500 hover:scale-105">
-						<div class="text-emerald-400 mb-4 text-4xl font-bold">Sp</div>
-						<h4 class="text-xl font-semibold text-white mb-2">Scrapyd</h4>
-						<p class="text-gray-400">Servicio para desplegar y ejecutar spiders de Scrapy, gestionando los procesos de scraping.</p>
-					</div>
-					<div class="fade-in bg-gray-900/50 p-8 rounded-2xl border border-gray-800 text-center transition-all duration-300 hover:border-emerald-500 hover:scale-105">
-						<div class="text-emerald-400 mb-4 text-4xl font-bold">Fa</div>
-						<h4 class="text-xl font-semibold text-white mb-2">FastAPI</h4>
-						<p class="text-gray-400">Framework de alto rendimiento para construir la API que controla y monitorea los trabajos de scraping.</p>
-					</div>
-					<div class="fade-in bg-gray-900/50 p-8 rounded-2xl border border-gray-800 text-center transition-all duration-300 hover:border-emerald-500 hover:scale-105">
-						<div class="text-emerald-400 mb-4 text-4xl font-bold">Do</div>
-						<h4 class="text-xl font-semibold text-white mb-2">Docker</h4>
-						<p class="text-gray-400">Para la contenerización de toda la aplicación, asegurando un despliegue fácil y consistente.</p>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- Ecosystem Section -->
-		<section id="ecosystem" class="py-20">
-			<div class="container mx-auto px-6">
-				<div class="fade-in max-w-5xl mx-auto bg-gray-900/50 rounded-2xl border border-gray-800 overflow-hidden flex flex-col md:flex-row items-center">
-					<div class="p-8 md:p-12 md:w-1/2">
-						<span class="inline-block bg-blue-500/10 text-blue-400 text-xs font-semibold px-3 py-1 rounded-full mb-4">
-							PARTE DE ALGO MÁS GRANDE
-						</span>
-						<h3 class="text-3xl font-bold text-white mb-4">El Ecosistema Stylos</h3>
-						<p class="text-gray-300 leading-relaxed mb-4">
-							Este proyecto forma parte del ecosistema Stylos, una plataforma de inteligencia artificial que analiza tendencias de moda y genera recomendaciones personalizadas.
-						</p>
-						<p class="text-gray-300 leading-relaxed">
-							Los datos extraídos por Stylos Scraper son el combustible que alimenta nuestros modelos de IA para identificar estilos como Old Money, Formal, Streetwear, y muchos más.
-						</p>
-					</div>
-					<div class="md:w-1/2 h-64 md:h-auto bg-cover bg-center" style="background-image: url('https://placehold.co/600x400/0a0a0a/34d399?text=Stylos+AI')"></div>
-				</div>
-			</div>
-		</section>
-
-		<!-- CTA Section -->
-		<section id="github" class="py-20 text-center">
-			<div class="container mx-auto px-6">
-				<div class="fade-in max-w-2xl mx-auto">
-					<h3 class="text-3xl md:text-4xl font-bold text-white mb-4">
-						¿Listo para contribuir o usar el proyecto?
-					</h3>
-					<p class="text-gray-400 text-lg mb-8">
-						El código es completamente abierto. Explora el repositorio, reporta issues o haz tu primer pull request.
-					</p>
-					<a href="#" class="bg-gray-800 text-white hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 rounded-lg px-8 py-4 text-lg font-bold inline-flex items-center space-x-3">
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
-							<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-						</svg>
-						<span>Ir al Repositorio</span>
-					</a>
-				</div>
-			</div>
-		</section>
-	</main>
-
-	<!-- Footer -->
-	<footer class="border-t border-gray-800 mt-20">
-		<div class="container mx-auto px-6 py-6 text-center text-gray-500">
-			<p>&copy; 2024 Stylos Scraper. Un proyecto de la comunidad para la comunidad.</p>
-		</div>
-	</footer>
-
-	<!-- Vue component that sets up IntersectionObserver on sections -->
-	<FadeInObserver client:load />
-</Layout>
+<noscript>
+	<meta http-equiv="refresh" content="0; url=/es/" />
+	<p>Redirigiendo a <a href="/es/">/es/</a>…</p>
+</noscript>
