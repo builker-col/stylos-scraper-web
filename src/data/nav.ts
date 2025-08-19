@@ -12,6 +12,7 @@ export type NavItem = {
 export const NAV_ITEMS: NavItem[] = [
 	{ id: 'hero', href: '#hero', label: { es: 'Inicio', en: 'Home' } },
 	{ id: 'highlights', href: '#highlights', label: { es: 'Características', en: 'Highlights' } },
+	{ id: 'scrapers', href: '#scrapers', label: { es: 'Scrapers', en: 'Scrapers' } },
 	{ id: 'quickstart', href: '#quickstart', label: { es: 'Inicio rápido', en: 'Quick Start' } },
 	{ id: 'features', href: '#features', label: { es: 'Tecnología', en: 'Tech' } },
 	{ id: 'docs', href: '#docs', label: { es: 'Docs', en: 'Docs' } },

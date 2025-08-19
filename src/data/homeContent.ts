@@ -11,6 +11,8 @@ export type HomeContent = {
 	/** High-level product capabilities visible to users */
 	highlights: { title: string; subtitle: string; items: FeatureItem[] };
 	features: { title: string; subtitle: string; items: FeatureItem[] };
+	/** Available scrapers by website */
+	scrapers: { title: string; subtitle?: string; items: { name: string; slug: string }[] };
 	quickstart: {
 		title: string;
 		subtitle: string;
@@ -27,9 +29,9 @@ export type HomeContent = {
 export const HOME_CONTENT: Record<Lang, HomeContent> = {
 	es: {
 		layout: {
-			title: 'Stylos Scraper — Web Scraping para E-commerce de Moda',
+			title: 'Stylos Scraper — Zara Scraper y Mango Scraper para E-commerce de Moda',
 			description:
-				'Solución profesional de web scraping distribuido para e-commerce de moda. Escalable, robusto y optimizado para grandes volúmenes de datos.',
+				'Solución profesional de web scraping distribuido para e-commerce de moda. Incluye Zara Scraper y Mango Scraper. Escalable, robusto y optimizado para grandes volúmenes de datos.',
 		},
 		header: {
 			github: 'Ver en GitHub',
@@ -62,6 +64,14 @@ export const HOME_CONTENT: Record<Lang, HomeContent> = {
 				{ abbr: '🎮', title: 'CLI Avanzada', description: 'Agenda, lanza y monitorea trabajos desde la terminal.' },
 				{ abbr: '📊', title: 'Monitoreo con Sentry', description: 'Trazabilidad de errores y performance de extremo a extremo.' },
 				{ abbr: '⚡', title: 'Middlewares Avanzados', description: 'Gestión inteligente de requests y anti‑detección mejorada.' },
+			],
+		},
+		scrapers: {
+			title: 'Scrapers disponibles',
+			subtitle: 'Por sitio web',
+			items: [
+				{ name: 'ZARA', slug: 'zara' },
+				{ name: 'MANGO', slug: 'mango' },
 			],
 		},
 		quickstart: {
@@ -160,9 +170,9 @@ export const HOME_CONTENT: Record<Lang, HomeContent> = {
 	},
 	en: {
 		layout: {
-			title: 'Stylos Scraper — Web Scraping for Fashion E-commerce',
+			title: 'Stylos Scraper — Zara scraper and Mango scraper for Fashion E-commerce',
 			description:
-				'Professional distributed web scraping solution for fashion e-commerce. Scalable, robust, and optimized for large datasets.',
+				'Professional distributed web scraping solution for fashion e-commerce. Includes Zara scraper and Mango scraper. Scalable, robust, and optimized for large datasets.',
 		},
 		header: {
 			github: 'View on GitHub',
@@ -195,6 +205,14 @@ export const HOME_CONTENT: Record<Lang, HomeContent> = {
 				{ abbr: '🎮', title: 'Advanced CLI', description: 'Schedule, launch, and monitor jobs from the terminal.' },
 				{ abbr: '📊', title: 'Sentry Monitoring', description: 'End‑to‑end error and performance tracking.' },
 				{ abbr: '⚡', title: 'Advanced Middlewares', description: 'Smart request management and improved anti‑detection.' },
+			],
+		},
+		scrapers: {
+			title: 'Available scrapers',
+			subtitle: 'By website',
+			items: [
+				{ name: 'ZARA', slug: 'zara' },
+				{ name: 'MANGO', slug: 'mango' },
 			],
 		},
 		quickstart: {

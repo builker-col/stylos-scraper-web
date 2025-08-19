@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { SUPPORTED_LANGUAGES, DEFAULT_LANG } from '../i18n/config';
+import { SCRAPER_SLUGS } from '../data/scrapers';
 
 // Helper to get site origin from environment or Astro config fallback
 function getSiteOrigin(url: URL): string {
@@ -24,6 +25,16 @@ export const GET: APIRoute = async ({ url }) => {
 			lastmod: now,
 			changefreq: 'weekly',
 			priority: lang === DEFAULT_LANG ? '1.0' : '0.8',
+		});
+
+		// Add scraper detail pages
+		SCRAPER_SLUGS.forEach((slug) => {
+			urls.push({
+				loc: `${origin}/${lang}/scrapers/${slug}/`,
+				lastmod: now,
+				changefreq: 'monthly',
+				priority: '0.7',
+			});
 		});
 	});
 

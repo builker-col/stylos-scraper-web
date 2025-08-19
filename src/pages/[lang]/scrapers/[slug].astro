@@ -1,0 +1,135 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getI18n } from '../../../i18n';
+import { OG_LOCALE, SUPPORTED_LANGUAGES } from '../../../i18n/config';
+import type { Lang } from '../../../i18n/config';
+import { getScraperBySlug, SCRAPER_SLUGS, buildRepoUrl } from '../../../data/scrapers';
+import ScraperDetails from '../../../components/scrapers/ScraperDetails.vue';
+import { BRAND_NAME } from '../../../data/site';
+
+type Params = { lang: string; slug: string };
+
+export function getStaticPaths() {
+  const paths = [] as { params: Params }[];
+  SUPPORTED_LANGUAGES.forEach((lang: Lang) => {
+    SCRAPER_SLUGS.forEach((slug: string) => {
+      paths.push({ params: { lang, slug } });
+    });
+  });
+  return paths;
+}
+
+const { lang } = getI18n(Astro.params.lang);
+const slug = Astro.params.slug as string;
+const scraper = getScraperBySlug(slug);
+if (!scraper) {
+  throw new Error(`Scraper not found: ${slug}`);
+}
+
+const title = scraper.title[lang];
+const description = scraper.description[lang];
+const ogImage = scraper.ogImage || '/favicon.svg';
+
+const spiderUrl = buildRepoUrl(scraper.spiderPath);
+const extractorUrl = buildRepoUrl(scraper.extractorPath);
+
+const otherSlug = SCRAPER_SLUGS.find((s: string) => s !== slug);
+---
+
+<Layout title={title} description={description} ogLocale={OG_LOCALE[lang]} lang={lang} ogImage={ogImage}>
+  <!-- Header (brand + back to home) -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-md header-blur" role="banner">
+    <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+      <a href={`/${lang}/`} class="text-xl font-bold text-white focus:outline-none focus:ring-2 focus:ring-emerald-300 rounded">
+        {BRAND_NAME}<span class="gradient-text">Scraper</span>
+      </a>
+      <a href={`/${lang}/`} class="bg-gray-800 text-white hover:bg-gray-700 transition-colors duration-300 rounded-lg px-4 py-2 text-sm font-medium inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-emerald-300">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+          <path d="M10.828 11H20a1 1 0 1 1 0 2h-9.172l3.536 3.536a1 1 0 1 1-1.414 1.414l-5.243-5.243a1 1 0 0 1 0-1.414l5.243-5.243a1 1 0 1 1 1.414 1.414L10.828 11z"/>
+        </svg>
+        <span>{lang === 'es' ? 'Volver al inicio' : 'Back to home'}</span>
+      </a>
+    </div>
+  </header>
+  <main id="content" class="pt-24">
+    <section class="relative py-20">
+      <div class="container mx-auto px-6 max-w-6xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+          <div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">{title}</h1>
+            <p class="text-gray-300 mb-6 text-lg">{description}</p>
+            <div class="flex flex-wrap gap-3">
+              <a href={scraper.demoUrl} target="_blank" rel="noreferrer" class="btn btn-cta text-white rounded-lg px-6 py-3 text-sm font-bold inline-flex items-center gap-2">
+                <span>{lang === 'es' ? 'Ver demo' : 'View demo'}</span>
+              </a>
+              <a href={spiderUrl} target="_blank" rel="noreferrer" class="bg-gray-800 text-white hover:bg-gray-700 rounded-lg px-5 py-3 text-sm font-semibold border border-gray-700 inline-flex items-center gap-2">
+                <span>{lang === 'es' ? 'Ver spider' : 'View spider'}</span>
+              </a>
+              <a href={extractorUrl} target="_blank" rel="noreferrer" class="bg-gray-800 text-white hover:bg-gray-700 rounded-lg px-5 py-3 text-sm font-semibold border border-gray-700 inline-flex items-center gap-2">
+                <span>{lang === 'es' ? 'Ver extractor' : 'View extractor'}</span>
+              </a>
+            </div>
+          </div>
+          <div class="text-center">
+            <a href={scraper.demoImage} target="_blank" rel="noreferrer" class="inline-block group">
+              <div class="relative inline-block rounded-3xl p-0.5 bg-gradient-to-br from-emerald-500/30 via-emerald-500/0 to-cyan-500/30 shadow-2xl">
+                <div class="rounded-3xl bg-black/40 backdrop-blur-sm border border-white/5 overflow-hidden">
+                  <img src={scraper.demoImage} alt={lang === 'es' ? `Demostración del ${scraper.name} scraper` : `${scraper.name} scraper demo`} class="w-full h-auto md:max-w-xl object-cover transform transition-transform duration-500 group-hover:scale-[1.02]" loading="lazy" />
+                </div>
+                <div class="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-white/10"></div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <ScraperDetails
+          client:load
+          lang={lang}
+          name={scraper.name}
+          demoUrl={scraper.demoUrl}
+          country={scraper.country[lang]}
+          status={scraper.status[lang]}
+          spiderPath={scraper.spiderPath}
+          spiderUrl={spiderUrl}
+          extractorPath={scraper.extractorPath}
+          extractorUrl={extractorUrl}
+          linesOfCode={scraper.linesOfCode}
+          domains={scraper.domains}
+          features={scraper.implementedFeatures[lang]}
+          techLines={scraper.techCommandLines[lang]}
+          extractedData={scraper.extractedData[lang]}
+          otherSlug={otherSlug}
+          faq={scraper.faq[lang]}
+        />
+      </div>
+    </section>
+  </main>
+
+  <script type="application/ld+json">{JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": title,
+    "description": description,
+    "url": Astro.url?.href,
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": lang === 'es' ? 'Inicio' : 'Home', "item": `${Astro.url.origin}/${lang}/` },
+        { "@type": "ListItem", "position": 2, "name": `${scraper.name} Scraper`, "item": Astro.url?.href }
+      ]
+    }
+  })}</script>
+
+  <script type="application/ld+json">{JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: scraper.faq[lang].map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a }
+    }))
+  })}</script>
+</Layout>
+
+
+
