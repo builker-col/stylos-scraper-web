@@ -47,7 +47,7 @@ export function getStaticPaths() {
 					</svg>
 					<span>{content.header.github}</span>
 				</a>
-				<a href={`/${otherLang}/`} class="bg-emerald-600 text-white hover:bg-emerald-700 transition-colors duration-300 rounded-lg px-3 py-2 text-sm font-medium" onclick="try{localStorage.setItem('preferredLang','${otherLang}')}catch(e){}">
+				<a href={`/${otherLang}/`} class="bg-emerald-600 text-white hover:bg-emerald-700 transition-colors duration-300 rounded-lg px-3 py-2 text-sm font-medium" onclick={`try{localStorage.setItem('preferredLang','${otherLang}')}catch(e){}` }>
 					{content.header.switchTo}
 				</a>
 				<button aria-label="Open menu" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded border border-gray-700 text-gray-300 hover:text-white hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-300" onclick="document.getElementById('mobile-nav')?.classList.toggle('hidden')">

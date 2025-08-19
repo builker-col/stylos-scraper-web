@@ -40,7 +40,7 @@ const text = lang === 'es'
 					<p class="text-gray-400 mb-8">{text.desc}</p>
 					<div class="flex items-center justify-center gap-3">
 						<a href={`/${lang}/`} class="btn btn-cta text-white rounded-lg px-6 py-3 font-semibold">{text.cta}</a>
-						<a href={`/${otherLang}/`} class="btn btn-secondary bg-gray-800 text-white rounded-lg px-6 py-3 font-semibold" onclick={`try{localStorage.setItem('preferredLang','${otherLang}')}catch(e){}`}>{lang === 'es' ? `Ver en ${text.switchLabel}` : `View in ${text.switchLabel}`}</a>
+						<a href={`/${otherLang}/`} class="btn btn-secondary bg-gray-800 text-white rounded-lg px-6 py-3 font-semibold" onclick={`try{localStorage.setItem('preferredLang','${otherLang}')}catch(e){}` }>{lang === 'es' ? `Ver en ${text.switchLabel}` : `View in ${text.switchLabel}`}</a>
 					</div>
 				</div>
 			</div>
