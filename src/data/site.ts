@@ -1,4 +1,4 @@
-export const BRAND_NAME = 'StylosScraper';
+export const BRAND_NAME = 'Stylos';
 export const REPOSITORY_URL = '#'; // Reemplaza con la URL real del repo si aplica
 
 export const HERO_BACKGROUND_IMAGE = '';

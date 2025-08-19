@@ -3,8 +3,12 @@ import Layout from '../../layouts/Layout.astro';
 import FadeInObserver from '../../components/FadeInObserver.vue';
 import { getI18n } from '../../i18n';
 import { OG_LOCALE } from '../../i18n/config';
+import { HOME_CONTENT } from '../../data/homeContent';
+import { BRAND_NAME, REPOSITORY_URL, ECOSYSTEM_IMAGE } from '../../data/site';
+import { NAV_ITEMS } from '../../data/nav';
 
-const { lang, dict } = getI18n(Astro.params.lang);
+const { lang } = getI18n(Astro.params.lang);
+const content = HOME_CONTENT[lang];
 const otherLang = lang === 'es' ? 'en' : 'es';
 
 export function getStaticPaths() {
@@ -16,28 +20,52 @@ export function getStaticPaths() {
 ---
 
 <Layout
-	title={dict.layout.title}
-	description={dict.layout.description}
+	title={content.layout.title}
+	description={content.layout.description}
 	lang={lang}
 	ogLocale={OG_LOCALE[lang]}
 >
 	<!-- Header -->
 	<header class="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-md" role="banner">
-		<div class="container mx-auto px-6 py-4 flex justify-between items-center">
-			<h1 class="text-xl font-bold text-white">
-				Stylos<span class="gradient-text">Scraper</span>
-			</h1>
+		<div class="container mx-auto px-6 py-4 flex items-center justify-between">
+			<div class="flex items-center gap-8">
+				<a href={`/${lang}/#hero`} class="text-xl font-bold text-white focus:outline-none focus:ring-2 focus:ring-emerald-300 rounded">
+					{BRAND_NAME}<span class="gradient-text">Scraper</span>
+				</a>
+				<nav class="hidden md:flex items-center gap-6" aria-label="Primary">
+					{NAV_ITEMS.map(item => (
+						<a href={item.href} class="text-gray-300 hover:text-white transition-colors text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-300 rounded">
+							{item.label[lang]}
+						</a>
+					))}
+				</nav>
+			</div>
 			<div class="flex items-center gap-2">
-				<a href="#github" aria-label={dict.header.githubAria} class="bg-gray-800 text-white hover:bg-gray-700 transition-colors duration-300 rounded-lg px-4 py-2 text-sm font-medium flex items-center space-x-2">
+				<a href="#github" aria-label={content.header.githubAria} class="bg-gray-800 text-white hover:bg-gray-700 transition-colors duration-300 rounded-lg px-4 py-2 text-sm font-medium hidden sm:inline-flex items-center space-x-2">
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
 						<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
 					</svg>
-					<span>{dict.header.github}</span>
+					<span>{content.header.github}</span>
 				</a>
 				<a href={`/${otherLang}/`} class="bg-emerald-600 text-white hover:bg-emerald-700 transition-colors duration-300 rounded-lg px-3 py-2 text-sm font-medium" onclick="try{localStorage.setItem('preferredLang','${otherLang}')}catch(e){}">
-					{dict.header.switchTo}
+					{content.header.switchTo}
 				</a>
+				<button aria-label="Open menu" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded border border-gray-700 text-gray-300 hover:text-white hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-300" onclick="document.getElementById('mobile-nav')?.classList.toggle('hidden')">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+					</svg>
+				</button>
 			</div>
+		</div>
+		<div id="mobile-nav" class="md:hidden hidden border-t border-gray-800 bg-black/60 backdrop-blur-md">
+			<nav class="container mx-auto px-6 py-4 flex flex-col gap-4" aria-label="Mobile">
+				{NAV_ITEMS.map(item => (
+					<a href={item.href} class="text-gray-300 hover:text-white transition-colors text-base font-medium">
+						{item.label[lang]}
+					</a>
+				))}
+				<a href="#github" class="text-gray-300 hover:text-white transition-colors text-base font-medium">{content.header.github}</a>
+			</nav>
 		</div>
 	</header>
 
@@ -47,16 +75,16 @@ export function getStaticPaths() {
 			<div class="container mx-auto px-6">
 				<div class="max-w-4xl mx-auto">
 					<span class="inline-block bg-gray-800 text-emerald-400 text-xs font-semibold px-3 py-1 rounded-full mb-4">
-						{dict.badge.openSource}
+						{content.badge.openSource}
 					</span>
 					<h2 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
-						{dict.hero.titlePrefix} <span class="gradient-text">{dict.hero.titleHighlight}</span> {dict.hero.titleSuffix}
+						{content.hero.titlePrefix} <span class="gradient-text">{content.hero.titleHighlight}</span> {content.hero.titleSuffix}
 					</h2>
 					<p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-						{dict.hero.subtitle}
+						{content.hero.subtitle}
 					</p>
 					<a href="#features" class="bg-emerald-500 text-white hover:bg-emerald-600 transition-transform duration-300 transform hover:scale-105 rounded-lg px-8 py-4 text-lg font-bold inline-block">
-						{dict.hero.cta}
+						{content.hero.cta}
 					</a>
 				</div>
 			</div>
@@ -67,9 +95,9 @@ export function getStaticPaths() {
 			<div class="container mx-auto px-6">
 				<div class="fade-in max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 					<div class="bg-gray-900/50 p-8 rounded-2xl border border-gray-800">
-						<h3 class="text-3xl font-bold text-white mb-4">{dict.description.title}</h3>
+						<h3 class="text-3xl font-bold text-white mb-4">{content.description.title}</h3>
 						<p class="text-gray-300 leading-relaxed">
-							{dict.description.body}
+							{content.description.body}
 						</p>
 					</div>
 					<div class="text-center">
@@ -86,13 +114,13 @@ export function getStaticPaths() {
 		<section id="features" class="py-20 bg-black/20">
 			<div class="container mx-auto px-6">
 				<div class="text-center max-w-2xl mx-auto mb-16">
-					<h3 class="text-3xl md:text-4xl font-bold text-white mb-4">{dict.features.title}</h3>
+					<h3 class="text-3xl md:text-4xl font-bold text-white mb-4">{content.features.title}</h3>
 					<p class="text-gray-400 text-lg">
-						{dict.features.subtitle}
+						{content.features.subtitle}
 					</p>
 				</div>
 				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-					{dict.features.items.map((f) => (
+					{content.features.items.map((f) => (
 						<div class="fade-in bg-gray-900/50 p-8 rounded-2xl border border-gray-800 text-center transition-all duration-300 hover:border-emerald-500 hover:scale-105">
 							<div class="text-emerald-400 mb-4 text-4xl font-bold">{f.abbr}</div>
 							<h4 class="text-xl font-semibold text-white mb-2">{f.title}</h4>
@@ -109,17 +137,17 @@ export function getStaticPaths() {
 				<div class="fade-in max-w-5xl mx-auto bg-gray-900/50 rounded-2xl border border-gray-800 overflow-hidden flex flex-col md:flex-row items-center">
 					<div class="p-8 md:p-12 md:w-1/2">
 						<span class="inline-block bg-blue-500/10 text-blue-400 text-xs font-semibold px-3 py-1 rounded-full mb-4">
-							{dict.ecosystem.badge}
+							{content.ecosystem.badge}
 						</span>
-						<h3 class="text-3xl font-bold text-white mb-4">{dict.ecosystem.title}</h3>
+						<h3 class="text-3xl font-bold text-white mb-4">{content.ecosystem.title}</h3>
 						<p class="text-gray-300 leading-relaxed mb-4">
-							{dict.ecosystem.p1}
+							{content.ecosystem.p1}
 						</p>
 						<p class="text-gray-300 leading-relaxed">
-							{dict.ecosystem.p2}
+							{content.ecosystem.p2}
 						</p>
 					</div>
-					<div class="md:w-1/2 h-64 md:h-auto bg-cover bg-center" style="background-image: url('https://placehold.co/600x400/0a0a0a/34d399?text=Stylos+AI')"></div>
+					<div class="md:w-1/2 h-64 md:h-auto bg-cover bg-center" style={`background-image: url('${ECOSYSTEM_IMAGE}')`}></div>
 				</div>
 			</div>
 		</section>
@@ -129,16 +157,16 @@ export function getStaticPaths() {
 			<div class="container mx-auto px-6">
 				<div class="fade-in max-w-2xl mx-auto">
 					<h3 class="text-3xl md:text-4xl font-bold text-white mb-4">
-						{dict.cta.title}
+						{content.cta.title}
 					</h3>
 					<p class="text-gray-400 text-lg mb-8">
-						{dict.cta.subtitle}
+						{content.cta.subtitle}
 					</p>
-					<a href="#" class="bg-gray-800 text-white hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 rounded-lg px-8 py-4 text-lg font-bold inline-flex items-center space-x-3">
+					<a href={REPOSITORY_URL} class="bg-gray-800 text-white hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 rounded-lg px-8 py-4 text-lg font-bold inline-flex items-center space-x-3">
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
 							<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
 						</svg>
-						<span>{dict.cta.button}</span>
+						<span>{content.cta.button}</span>
 					</a>
 				</div>
 			</div>
@@ -148,7 +176,7 @@ export function getStaticPaths() {
 	<!-- Footer -->
 	<footer class="border-t border-gray-800 mt-20" role="contentinfo">
 		<div class="container mx-auto px-6 py-6 text-center text-gray-500">
-			<p>&copy; {dict.footer.text}</p>
+			<p>&copy; {content.footer.text}</p>
 		</div>
 	</footer>
 

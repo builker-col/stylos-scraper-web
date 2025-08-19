@@ -1,4 +1,3 @@
-import DICTIONARIES from './dictionaries';
 import { DEFAULT_LANG, SUPPORTED_LANGUAGES, type Lang } from './config';
 
 export function normalizeLang(input: string | undefined | null): Lang {
@@ -8,7 +7,7 @@ export function normalizeLang(input: string | undefined | null): Lang {
 
 export function getI18n(inputLang: string | undefined) {
 	const lang = normalizeLang(inputLang);
-	return { lang, dict: DICTIONARIES[lang] } as const;
+	return { lang } as const;
 }
 
 
