@@ -4,7 +4,7 @@ import FadeInObserver from '../../components/FadeInObserver.vue';
 import { getI18n } from '../../i18n';
 import { OG_LOCALE } from '../../i18n/config';
 import { HOME_CONTENT } from '../../data/homeContent';
-import { BRAND_NAME, REPOSITORY_URL, ECOSYSTEM_IMAGE } from '../../data/site';
+import { BRAND_NAME, REPOSITORY_URL, ECOSYSTEM_IMAGE, DESCRIPTION_IMAGE } from '../../data/site';
 import { NAV_ITEMS } from '../../data/nav';
 
 const { lang } = getI18n(Astro.params.lang);
@@ -26,7 +26,7 @@ export function getStaticPaths() {
 	ogLocale={OG_LOCALE[lang]}
 >
 	<!-- Header -->
-	<header class="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-md" role="banner">
+	<header class="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-md header-blur" role="banner">
 		<div class="container mx-auto px-6 py-4 flex items-center justify-between">
 			<div class="flex items-center gap-8">
 				<a href={`/${lang}/#hero`} class="text-xl font-bold text-white focus:outline-none focus:ring-2 focus:ring-emerald-300 rounded">
@@ -34,7 +34,7 @@ export function getStaticPaths() {
 				</a>
 				<nav class="hidden md:flex items-center gap-6" aria-label="Primary">
 					{NAV_ITEMS.map(item => (
-						<a href={item.href} class="text-gray-300 hover:text-white transition-colors text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-300 rounded">
+						<a href={item.href} data-section={item.id} class="nav-link text-gray-300 hover:text-white transition-colors text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-300 rounded">
 							{item.label[lang]}
 						</a>
 					))}
@@ -60,7 +60,7 @@ export function getStaticPaths() {
 		<div id="mobile-nav" class="md:hidden hidden border-t border-gray-800 bg-black/60 backdrop-blur-md">
 			<nav class="container mx-auto px-6 py-4 flex flex-col gap-4" aria-label="Mobile">
 				{NAV_ITEMS.map(item => (
-					<a href={item.href} class="text-gray-300 hover:text-white transition-colors text-base font-medium">
+					<a href={item.href} data-section={item.id} class="nav-link text-gray-300 hover:text-white transition-colors text-base font-medium" onclick="document.getElementById('mobile-nav')?.classList.add('hidden')">
 						{item.label[lang]}
 					</a>
 				))}
@@ -83,7 +83,7 @@ export function getStaticPaths() {
 					<p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10">
 						{content.hero.subtitle}
 					</p>
-					<a href="#features" class="bg-emerald-500 text-white hover:bg-emerald-600 transition-transform duration-300 transform hover:scale-105 rounded-lg px-8 py-4 text-lg font-bold inline-block">
+					<a href="#highlights" class="btn btn-cta text-white rounded-lg px-8 py-4 text-lg font-bold inline-block">
 						{content.hero.cta}
 					</a>
 				</div>
@@ -101,10 +101,99 @@ export function getStaticPaths() {
 						</p>
 					</div>
 					<div class="text-center">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-40 w-40 inline-block text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v11m0 5l4.879-4.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242z" />
-							<path stroke-linecap="round" stroke-linejoin="round" d="M9.75 12.75h4.5m-4.5 3h4.5m-7.5-6.75h7.5" />
-						</svg>
+						<a href={DESCRIPTION_IMAGE} target="_blank" rel="noreferrer" class="inline-block group">
+							<div class="relative inline-block rounded-2xl p-0.5 bg-gradient-to-br from-emerald-500/30 via-emerald-500/0 to-cyan-500/30 shadow-xl">
+								<div class="rounded-2xl bg-black/40 backdrop-blur-sm border border-white/5 overflow-hidden">
+									<img src={DESCRIPTION_IMAGE} alt="Demostración de scraping de Zara" class="w-full h-auto md:max-w-2xl lg:max-w-3xl mx-auto object-cover transform transition-transform duration-500 group-hover:scale-[1.02]" loading="lazy" />
+								</div>
+								<div class="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-white/10"></div>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Highlights Section -->
+		<section id="highlights" class="py-20 bg-black/10">
+			<div class="container mx-auto px-6">
+				<div class="text-center max-w-2xl mx-auto mb-16">
+					<h3 class="text-3xl md:text-4xl font-bold text-white mb-4">{content.highlights.title}</h3>
+					<p class="text-gray-400 text-lg">{content.highlights.subtitle}</p>
+				</div>
+				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+					{content.highlights.items.map((h) => (
+						<div class="interactive-card tilt fade-in bg-gray-900/50 p-8 rounded-2xl border border-gray-800 text-center">
+							<div class="mb-4 text-3xl" aria-hidden="true">{h.abbr}</div>
+							<h4 class="text-lg font-semibold text-white mb-2">{h.title}</h4>
+							<p class="text-gray-400 text-sm">{h.description}</p>
+						</div>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<!-- Quickstart Section -->
+		<section id="quickstart" class="py-20 bg-black/10">
+			<div class="container mx-auto px-6">
+				<div class="text-center max-w-2xl mx-auto mb-12">
+					<h3 class="text-3xl md:text-4xl font-bold text-white mb-3">{content.quickstart.title}</h3>
+					<p class="text-gray-400 text-lg">{content.quickstart.subtitle}</p>
+				</div>
+				<div class="fade-in max-w-5xl mx-auto grid grid-cols-1 gap-6 items-start">
+					{content.quickstart.steps.map((s, idx) => (
+						<div class="step-card bg-gray-900/60 p-6 rounded-2xl border border-gray-800">
+							<div class="flex items-center gap-2 text-emerald-400 text-sm font-semibold mb-2">
+								<span class="step-badge">{idx + 1}</span>
+								<span> Paso {idx + 1}</span>
+							</div>
+							<h4 class="text-lg font-semibold text-white mb-3">{s.title}</h4>
+							<pre class="code-block mb-3"><code>{s.lines.join('\n')}</code></pre>
+							{Boolean(s.detailsLines?.length) && (
+								<details class="details-box">
+									<summary class="details-summary">{s.detailsTitle}</summary>
+									<pre class="code-block mt-3"><code>{s.detailsLines!.join('\n')}</code></pre>
+								</details>
+							)}
+						</div>
+					))}
+				</div>
+				<div class="max-w-5xl mx-auto mt-8 bg-gray-900/60 p-6 rounded-2xl border border-gray-800">
+					<h4 class="text-lg font-semibold text-white mb-3">Servicios iniciados</h4>
+					<ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+						{content.quickstart.services.map(s => {
+							const parts = s.split('→');
+							const label = parts[0]?.trim() || s;
+							const url = parts[1]?.trim();
+							return (
+								<li class="chip">
+									{url ? (
+										<a href={url} target="_blank" rel="noreferrer" class="chip-link">{label} →</a>
+									) : (
+										<span>{s}</span>
+									)}
+								</li>
+							);
+						})}
+					</ul>
+				</div>
+				<div class="max-w-5xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div class="bg-gray-900/60 p-6 rounded-2xl border border-gray-800">
+						<h4 class="text-lg font-semibold text-white mb-3">{content.quickstart.basic.title}</h4>
+						{content.quickstart.basic.blocks.map((b) => (
+							<div class="mb-5">
+								<div class="text-gray-300 font-medium mb-2">{b.title}</div>
+								<pre class="code-block"><code>{b.lines.join('\n')}</code></pre>
+							</div>
+						))}
+					</div>
+					<div class="bg-gray-900/60 p-6 rounded-2xl border border-gray-800">
+						<h4 class="text-lg font-semibold text-white mb-3">Tips</h4>
+						<ul class="list-disc list-inside text-gray-400 text-sm space-y-2">
+							<li>La CLI muestra estado en tiempo real, IDs de job y logs detallados.</li>
+							<li>Puedes escalar Chrome para más paralelismo: <code>docker-compose up --scale chrome=3 -d</code></li>
+							<li>Ejecuta comandos dentro de contenedores: <code>docker-compose exec api ...</code></li>
+						</ul>
 					</div>
 				</div>
 			</div>
@@ -121,11 +210,36 @@ export function getStaticPaths() {
 				</div>
 				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 					{content.features.items.map((f) => (
-						<div class="fade-in bg-gray-900/50 p-8 rounded-2xl border border-gray-800 text-center transition-all duration-300 hover:border-emerald-500 hover:scale-105">
+						<div class="interactive-card tilt fade-in bg-gray-900/50 p-8 rounded-2xl border border-gray-800 text-center">
 							<div class="text-emerald-400 mb-4 text-4xl font-bold">{f.abbr}</div>
 							<h4 class="text-xl font-semibold text-white mb-2">{f.title}</h4>
 							<p class="text-gray-400">{f.description}</p>
 						</div>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<!-- Docs Section -->
+		<section id="docs" class="py-20">
+			<div class="container mx-auto px-6">
+				<div class="text-center max-w-2xl mx-auto mb-16">
+					<h3 class="text-3xl md:text-4xl font-bold text-white mb-4">{content.docs.title}</h3>
+					<p class="text-gray-400 text-lg">{content.docs.subtitle}</p>
+				</div>
+				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+					{content.docs.items.map((d) => (
+						d.url ? (
+							<a href={d.url} target="_blank" rel="noreferrer" class="interactive-card tilt fade-in bg-gray-900/50 p-8 rounded-2xl border border-gray-800 hover:border-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-300">
+								<h4 class="text-xl font-semibold text-white mb-2">{d.title}</h4>
+								<p class="text-gray-400">{d.description}</p>
+							</a>
+						) : (
+							<div class="interactive-card tilt fade-in bg-gray-900/50 p-8 rounded-2xl border border-gray-800">
+								<h4 class="text-xl font-semibold text-white mb-2">{d.title}</h4>
+								<p class="text-gray-400">{d.description}</p>
+							</div>
+						)
 					))}
 				</div>
 			</div>
@@ -162,7 +276,7 @@ export function getStaticPaths() {
 					<p class="text-gray-400 text-lg mb-8">
 						{content.cta.subtitle}
 					</p>
-					<a href={REPOSITORY_URL} class="bg-gray-800 text-white hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 rounded-lg px-8 py-4 text-lg font-bold inline-flex items-center space-x-3">
+					<a href={REPOSITORY_URL} class="btn btn-secondary bg-gray-800 text-white rounded-lg px-8 py-4 text-lg font-bold inline-flex items-center space-x-3 icon-link">
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
 							<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
 						</svg>
@@ -180,8 +294,86 @@ export function getStaticPaths() {
 		</div>
 	</footer>
 
+	<!-- Floating back-to-top button -->
+	<button id="toTop" aria-label="Volver arriba" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Volver arriba">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+			<path d="M12 4l-7 7h4v7h6v-7h4z" />
+		</svg>
+		<span class="sr-only">Volver arriba</span>
+	</button>
+
 	<!-- Vue component that sets up IntersectionObserver on sections -->
 	<FadeInObserver client:load />
+
+	<!-- ScrollSpy for nav highlighting -->
+	<script>
+	(() => {
+		try {
+			const links: HTMLAnchorElement[] = Array.from(document.querySelectorAll<HTMLAnchorElement>('a.nav-link[data-section]'));
+			const sections: Map<string, HTMLAnchorElement[]> = new Map();
+			links.forEach((a: HTMLAnchorElement) => {
+				const id = a.getAttribute('data-section');
+				if (!id) return;
+				if (!sections.has(id)) sections.set(id, []);
+				sections.get(id)!.push(a);
+			});
+			const io = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+				entries.forEach((entry: IntersectionObserverEntry) => {
+					const id = (entry.target as HTMLElement).id;
+					const anchors: HTMLAnchorElement[] = sections.get(id) || [];
+					if (entry.isIntersecting) {
+						anchors.forEach((el: HTMLAnchorElement) => el.classList.add('active'));
+					} else {
+						anchors.forEach((el: HTMLAnchorElement) => el.classList.remove('active'));
+					}
+				});
+			}, { rootMargin: '-40% 0px -50% 0px', threshold: 0.01 });
+			['hero','highlights','quickstart','features','docs','ecosystem','github'].forEach((id: string) => {
+				const el: Element | null = document.getElementById(id);
+				if (el) io.observe(el);
+			});
+
+			// Header scrolled state + toTop visibility
+			const headerEl = document.querySelector('header.header-blur');
+			const toTopBtn = document.getElementById('toTop');
+			const onScroll = () => {
+				const y = window.scrollY || document.documentElement.scrollTop || 0;
+				if (headerEl) {
+					if (y > 8) (headerEl as HTMLElement).classList.add('scrolled');
+					else (headerEl as HTMLElement).classList.remove('scrolled');
+				}
+				if (toTopBtn) {
+					if (y > 300) toTopBtn.classList.add('visible');
+					else toTopBtn.classList.remove('visible');
+				}
+			};
+			onScroll();
+			window.addEventListener('scroll', onScroll, { passive: true });
+
+			// Tilt interaction (skipped if reduced motion)
+			const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			if (!reduceMotion) {
+				const tiltEls: HTMLElement[] = Array.from(document.querySelectorAll('.tilt')) as HTMLElement[];
+				const maxTilt = 6;
+				tiltEls.forEach((card) => {
+					card.addEventListener('mousemove', (ev: MouseEvent) => {
+						const rect = (ev.currentTarget as HTMLElement).getBoundingClientRect();
+						const x = ev.clientX - rect.left;
+						const y = ev.clientY - rect.top;
+						const px = (x / rect.width) - 0.5;
+						const py = (y / rect.height) - 0.5;
+						const rx = (-py * maxTilt).toFixed(2);
+						const ry = (px * maxTilt).toFixed(2);
+						(card as HTMLElement).style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+					});
+					card.addEventListener('mouseleave', (ev: MouseEvent) => {
+						(ev.currentTarget as HTMLElement).style.transform = '';
+					});
+				});
+			}
+		} catch (_) {}
+	})();
+	</script>
 </Layout>
 
 
